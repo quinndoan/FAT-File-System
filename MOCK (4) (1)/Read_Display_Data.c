@@ -14,7 +14,7 @@ Node_Data * Create_Node(uint8_t idx){
 
 void Add_Node(uint8_t idx){
 	if(HEAD == NULL){
-		HEAD = Create_Node(idx);		//set up HEAD
+		HEAD = Create_Node(idx);
 	}
 	else{
 		Node_Data *New_Node = Create_Node(idx);
@@ -131,17 +131,19 @@ status_t Function_In(uint8_t choice) {
         if (top >= 0) {
             if (top >= 1) {
                 pop();
-                Clear_Linked_List();
+                system("cls");
+                Clear_Linked_List(); 
                 Read_Display_Sub_Directory(topStack()); 
                 return Valid;
             } else {
                 pop();
+                system("cls");
                 Clear_Linked_List(); 
                 Read_Display_Root_Directory(); 
                 return Valid;
             }
         } else {
-            printf("Already at root. You entered exiting.\n");
+            printf("You entered exiting.\n");
             exit(0);
         }
     } else {
@@ -152,6 +154,7 @@ status_t Function_In(uint8_t choice) {
                 if (ptrStruct->File_Attribute == 0x10) {
                     uint32_t directoryAddress = (uint32_t)ptrStruct->First_Cluster_Number;
                     push(directoryAddress);
+                    system("cls");
                     Clear_Linked_List(); 
                     Read_Display_Sub_Directory(topStack()); 
                 } else {
@@ -166,5 +169,4 @@ status_t Function_In(uint8_t choice) {
         return Invalid;
     }
 }
-
 

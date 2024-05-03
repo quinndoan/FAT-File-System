@@ -7,7 +7,7 @@ int main(){
 	Read_boot_block();
 	Read_Display_Root_Directory();
 	while(1){
-		printf("Enter your choice:\n");
+		printf("Enter your choice: ");
 		scanf("%d", &choice);
 		
 		if(Function_In(choice) == Invalid){

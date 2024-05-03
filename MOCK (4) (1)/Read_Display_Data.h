@@ -36,7 +36,6 @@ static File_t File_Type = Directory;
 void Read_Display_Root_Directory();
 status_t Function_In(uint8_t choice);
 
-
 uint32_t directory_stack[STACK_SIZE];
 int top = -1;
 void push(uint32_t directory);
