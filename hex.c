@@ -209,3 +209,12 @@ void getSortedString(const char *src, uint8_t lenE, uint32_t lenA)
     }
     decArr2HexStr(decArr, decArrLen, hexValArr);
 }
+
+int str2dec_lilE(const char *str, uint8_t lenE) // str2dec little Endian sorted
+{
+    uint32_t result = RUNTIME_SUCCESS;
+    setHexLen(lenE);
+    getSortedString(str, lenE, getStrLen(str));
+    str2decArr(hexValArr, getStrLen(hexValArr), &result);
+    return result;
+}

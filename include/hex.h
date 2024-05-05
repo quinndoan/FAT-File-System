@@ -21,7 +21,7 @@ extern uint8_t  hexValArr[ARR_MAX_LEN] ;
 extern 
 void setHexLen(uint8_t len);
 extern void printStat(runStat stat);
-
+extern int str2dec_lilE(const char *str, uint8_t lenE);
 void init_0();
 extern uint8_t char2dec(int8_t c);
 extern uint32_t str2decArr(const char *str, uint8_t len, uint32_t *pDecimal);
