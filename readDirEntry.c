@@ -41,9 +41,9 @@ void decode_root_dir(FILE *file, long offset) {
     for (int i = 0; i < 16; i++) {
         DirEntry entry;
         fread(entry.filename, 1, 8, file);
-        entry.filename[8] = '\0'; // Null-terminate the filename
+        entry.filename[8] = '\0'; 
         fread(entry.ext, 1, 3, file);
-        entry.ext[3] = '\0'; // Null-terminate the extension
+        entry.ext[3] = '\0'; 
         fread(&entry.attr, 1, 1, file);
         fseek(file, 10, SEEK_CUR); // Skip reserved bytes
         fread(&entry.time, 2, 1, file);

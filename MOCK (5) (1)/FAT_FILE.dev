@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=NTD.h
+FileName=Read_boot_sector.h
 CompileCpp=0
 Folder=
 Compile=1
@@ -71,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=NTD.c
+FileName=Read_boot_sector.c
 CompileCpp=0
 Folder=
 Compile=1

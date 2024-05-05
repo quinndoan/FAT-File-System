@@ -1,7 +1,15 @@
+#include "Read_boot_sector.h"
 #include "Read_Display_Data.h"
+#include "common.h"
+#define BLOCK_SIZE 512
 
+static Root_Directory_t *ptrStruct = NULL;
+static File_t File_Type = Directory; 
 static uint8_t Buff[32];
+static int top = -1;
+extern Boot_Block Boot_Info;
 extern uint32_t Root_Directory_Address;
+
 
 Node_Data * Create_Node(uint8_t idx){
 	Node_Data *NewNode = (Node_Data *)malloc(sizeof(Node_Data));
@@ -54,23 +62,25 @@ void Read_Root_Directory(){
 }
 
 void Display_Directory(){
+	system("cls");
 	printf("---------------------------------------------------------------------\n");
-    printf("ID	Filename	 	Extension	Attributes	Time		Date		Size\n");
+    printf("ID	Filename  	   Extension	 	Time		Date		Size\n");
     printf("---------------------------------------------------------------------\n");
 	Node_Data *pCheck = HEAD;
 	while(pCheck != NULL){
 		ptrStruct = (Root_Directory_t *)pCheck->pData;
 		printf("%d	",pCheck->index);
-		printf("Filename: %-9s	", ptrStruct->File_Name);
-    printf("Extension: %-3s	", ptrStruct->File_Extension);
-    printf("Attributes: %02X	", ptrStruct->File_Attribute);
-    printf("Time: %04X	", ptrStruct->Time);
-    printf("Date: %04X	", ptrStruct->Date);
-    printf("Size: %u\n", ptrStruct->File_Size);
-		
+		copy_String(ptrStruct->File_Name, Buff,8);
+		printf("Filename: %-8s ",Buff);
+    	printf("Extension: %-3s	", ptrStruct->File_Extension);
+    	printf("Time: %04X	", ptrStruct->Time);
+    	printf("Date: %04X	", ptrStruct->Date);
+    	printf("Size: %u\n", ptrStruct->File_Size);
 		printf("\n");
 		pCheck = pCheck->Next;
 	}
+	printf("---------------------------------------------------------------------\n");
+	printf("0.Back to parent folder\n");
 }
 
 void Read_Sub_Directory(uint32_t Address){
@@ -88,10 +98,6 @@ void Read_Sub_Directory(uint32_t Address){
 			index++;
 		}
 	}
-}
-
-void Read_Display_File(){
-	//
 }
 
 void Read_Display_Sub_Directory(uint32_t Address){
@@ -126,24 +132,57 @@ uint32_t topStack() {
     return directory_stack[top];
 }
 
-status_t Function_In(uint8_t choice) {
+void Display_File(uint32_t Address){
+	uint16_t idx = 0;
+	fseek(pFile, Address, SEEK_SET);
+	for(idx = 0; idx < BLOCK_SIZE; idx++){
+		if(feof(pFile) != 0){
+			break;
+		}
+		printf("%c",fgetc(pFile));
+	}
+}
+
+uint16_t Get_next_Address(uint16_t Address){
+	uint16_t *ptr;
+	fseek(pFile, 0x200 + 3*Address/2, SEEK_SET);
+	if( Address % 2 == 0){
+		Read_File(Buff, 2);
+		ptr = (uint16_t*)Buff;
+		Address = *ptr & 0xFFF;
+	}
+	else{
+		Read_File(Buff, 2);
+		ptr = (uint16_t*)Buff;
+		Address = (*ptr & 0xFFF0) >> 4;
+	}
+	return Address;
+}
+
+void Read_Display_File(uint16_t Address){
+	Clear_Linked_List();
+	system("cls");
+	while( Address < 0x0FF8){
+		Display_File( Move_t_Block((uint32_t)Address + 31));
+		Address = Get_next_Address(Address);
+	}
+	printf("\n");
+}
+
+void Function_In(uint8_t choice) {
     if (choice == 0) {
         if (top >= 0) {
             if (top >= 1) {
                 pop();
-                system("cls");
                 Clear_Linked_List(); 
                 Read_Display_Sub_Directory(topStack()); 
-                return Valid;
             } else {
                 pop();
-                system("cls");
                 Clear_Linked_List(); 
                 Read_Display_Root_Directory(); 
-                return Valid;
             }
         } else {
-            printf("You entered exiting.\n");
+            printf("You entered exit. Exiting...\n");
             exit(0);
         }
     } else {
@@ -152,21 +191,20 @@ status_t Function_In(uint8_t choice) {
             if (pCheck->index == choice) {
                 Root_Directory_t *ptrStruct = (Root_Directory_t*)pCheck->pData;
                 if (ptrStruct->File_Attribute == 0x10) {
-                    uint32_t directoryAddress = (uint32_t)ptrStruct->First_Cluster_Number;
+                    uint16_t directoryAddress = (uint16_t)ptrStruct->First_Cluster_Number;
                     push(directoryAddress);
-                    system("cls");
                     Clear_Linked_List(); 
                     Read_Display_Sub_Directory(topStack()); 
                 } else {
-                    printf("File\n");
-                    // Code vào ra tuong tu cho file
+                    uint16_t fileAddress = (uint16_t)ptrStruct->First_Cluster_Number;
+                    push(fileAddress);
+                    Read_Display_File(fileAddress);
                 }
-                return Valid;
+                isValidChoice = 1; 
+                break;
             }
             pCheck = pCheck->Next;
         }
-        printf("You entered an invalid number. Please enter again.\n");
-        return Invalid;
     }
 }
 

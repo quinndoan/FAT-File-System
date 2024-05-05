@@ -8,8 +8,4 @@ typedef struct {
 	uint8_t FAT_style[8];							//FAT12
 }Boot_Block;
 
-extern Boot_Block Boot_Info;
-extern uint32_t Root_Directory_Address;
-
 void Read_boot_block();
-

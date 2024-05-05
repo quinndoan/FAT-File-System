@@ -1,6 +1,8 @@
+#ifndef _INC_DATA_
+#define _INC_DATA_
 #include "lib.h"
-#include "common.h"
 #define STACK_SIZE 100
+#define BLOCK_SIZE 512
 typedef struct{
 	uint8_t File_Name[8];
 	uint8_t File_Extension[3];
@@ -18,26 +20,17 @@ typedef struct Node_Data{
 	struct Node_Data *Next;
 }Node_Data;
 
-typedef enum {
-	Invalid,
-	Valid,
-}status_t;
-
 typedef enum{
 	Directory,
 	Sub_Directory,
 	File_Txt,
 }File_t;
-
+uint8_t choice;
+static isValidChoice = 0;
 static Node_Data *HEAD = NULL;
-static Root_Directory_t *ptrStruct = NULL;
-static File_t File_Type = Directory; 
+static uint32_t directory_stack[STACK_SIZE];
 
 void Read_Display_Root_Directory();
-status_t Function_In(uint8_t choice);
-
-uint32_t directory_stack[STACK_SIZE];
-int top = -1;
-void push(uint32_t directory);
-uint32_t pop();
-uint32_t topStack();
+void Function_In(uint8_t choice);
+void Read_Display_File(uint16_t Address);
+#endif
