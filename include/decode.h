@@ -1,5 +1,6 @@
 #ifndef _DECODE_H_
 #define _DECODE_H_
+#include <stdint.h>
 void decode_Time(uint32_t decVal, int *h, int *m, int *s)
 {
     *m = (decVal >> 5) & ~(31 << 6);

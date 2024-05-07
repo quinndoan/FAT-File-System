@@ -2,7 +2,7 @@
 #define _INC_DATA_
 #include "lib.h"
 #define STACK_SIZE 100
-
+#define BLOCK_SIZE 512
 typedef struct{
 	uint8_t File_Name[8];
 	uint8_t File_Extension[3];
@@ -25,10 +25,13 @@ typedef enum{
 	Sub_Directory,
 	File_Txt,
 }File_t;
-
+// uint8_t choice;
+static isValidChoice = 0;
 static Node_Data *HEAD = NULL;
 static uint32_t directory_stack[STACK_SIZE];
+static int y, mth, day, h, m, s;
 
 void Read_Display_Root_Directory();
 void Function_In(uint8_t choice);
+void Read_Display_File(uint16_t Address);
 #endif
