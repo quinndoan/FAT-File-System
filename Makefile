@@ -8,10 +8,10 @@ LDIR =../lib
 
 LIBS = -lm
 
-_DEPS = common.h decode.h lib.h Read_boot_sector.h Read_Display_Data.h
+_DEPS = common.h decode.h lib.h Read_boot_sector.h Read_Display_Data.h OpenFile_Console.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o common.o Read_boot_sector.o Read_Display_Data.o
+_OBJ = main.o common.o Read_boot_sector.o Read_Display_Data.o OpenFile_Console.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
@@ -21,7 +21,7 @@ $(ODIR)/%.o: $(IDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 
-a: $(OBJ)
+read: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

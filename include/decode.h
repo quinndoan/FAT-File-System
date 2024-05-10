@@ -1,16 +1,27 @@
 #ifndef _DECODE_H_
 #define _DECODE_H_
 #include <stdint.h>
-void decode_Time(uint32_t decVal, int *h, int *m, int *s)
+typedef struct
 {
-    *m = (decVal >> 5) & ~(31 << 6);
-    *h = (decVal >> 11) & 31;
-    *s = (decVal) & 31;
+    uint16_t y : 16;
+    uint16_t mth : 4;
+    uint16_t d : 5;
+
+    uint16_t h : 5;
+    uint16_t m : 6;
+    uint16_t s : 5;
+} date_time;
+static date_time dateTime;
+void decode_Time(uint32_t decVal)
+{
+    dateTime.m = (decVal >> 5) & ~(31 << 6);
+    dateTime.h = (decVal >> 11) & 31;
+    dateTime.s = (decVal) & 31;
 }
-void decode_Date(uint32_t decVal, int *y, int *mth, int *day)
+void decode_Date(uint32_t decVal)
 {
-    *y = ((decVal >> 9) & 31)+1980;
-    *mth = (decVal >> 5) & (15);
-    *day = (decVal) & 31;
+    dateTime.y = ((decVal >> 9) & 31) + 1980;
+    dateTime.mth = (decVal >> 5) & (15);
+    dateTime.d = (decVal) & 31;
 }
 #endif

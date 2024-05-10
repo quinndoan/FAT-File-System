@@ -25,11 +25,10 @@ typedef enum{
 	Sub_Directory,
 	File_Txt,
 }File_t;
-// uint8_t choice;
+
 static isValidChoice = 0;
 static Node_Data *HEAD = NULL;
 static uint32_t directory_stack[STACK_SIZE];
-static int y, mth, day, h, m, s;
 
 void Read_Display_Root_Directory();
 void Function_In(uint8_t choice);
