@@ -75,7 +75,7 @@ void Read_Root_Directory()
 
 void Display_Directory()
 {
-	// system("cls");
+	system("cls");
 	printf("------------------------------------------------------------------------------\n");
 	printf("ID	Filename 	Extension	Time		Date		Size\n");
 	printf("------------------------------------------------------------------------------\n");

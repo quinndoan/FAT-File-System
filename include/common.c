@@ -4,15 +4,6 @@ FILE *pFile;
 
 void Open_File(const char *filename)
 {
-	char *ptrC = filename;
-	printf("read argv", *ptrC);
-	while (*ptrC != '\0')
-	{
-		printf("%c", *ptrC);
-		ptrC += 1;
-	}
-	printf("\n");
-
 	pFile = fopen(filename, "rb");
 }
 
