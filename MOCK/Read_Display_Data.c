@@ -2,6 +2,7 @@
 #include "Read_Display_Data.h"
 #include "common.h"
 #define BLOCK_SIZE 512
+#include "decode.h"
 
 static Root_Directory_t *ptrStruct = NULL;
 static File_t File_Type = Directory; 
@@ -64,7 +65,7 @@ void Read_Root_Directory(){
 void Display_Directory(){
 	system("cls");
 	printf("---------------------------------------------------------------------\n");
-    printf("ID	Filename  	   Extension	 	Time		Date		Size\n");
+    printf("ID	Filename  	   Extension	 	Time			Date			Size\n");
     printf("---------------------------------------------------------------------\n");
 	Node_Data *pCheck = HEAD;
 	while(pCheck != NULL){
@@ -73,14 +74,17 @@ void Display_Directory(){
 		copy_String(ptrStruct->File_Name, Buff,8);
 		printf("Filename: %-8s ",Buff);
     	printf("Extension: %-3s	", ptrStruct->File_Extension);
-    	printf("Time: %04X	", ptrStruct->Time);
-    	printf("Date: %04X	", ptrStruct->Date);
+    	int y, mth, day, h, m, s;
+		decode_Time(ptrStruct->Time, &h, &m, &s);
+		decode_Date(ptrStruct->Date, &y, &mth, &day);
+		printf("Time: %d:%d:%d		", h, m, s);
+		printf("Date: %d/%d/%d		", y, mth, day);
     	printf("Size: %u\n", ptrStruct->File_Size);
 		printf("\n");
 		pCheck = pCheck->Next;
 	}
 	printf("---------------------------------------------------------------------\n");
-	printf("0.Back to parent folder\n");
+	printf("0.Back\n");
 }
 
 void Read_Sub_Directory(uint32_t Address){
@@ -187,8 +191,8 @@ void Function_In(uint8_t choice) {
         }
     } else {
         Node_Data *pCheck = HEAD;
-        while (pCheck != NULL) {
-            if (pCheck->index == choice) {
+        while (pCheck != NULL){
+            if (pCheck->index == choice){
                 Root_Directory_t *ptrStruct = (Root_Directory_t*)pCheck->pData;
                 if (ptrStruct->File_Attribute == 0x10) {
                     uint16_t directoryAddress = (uint16_t)ptrStruct->First_Cluster_Number;

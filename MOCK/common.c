@@ -3,7 +3,7 @@
 FILE *pFile;
 
 void Open_File(const char *filename){
-	pFile = fopen(filename, "r");
+	pFile = fopen(filename, "rb");
 }
 
 void Close_File(){
